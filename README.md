@@ -1,11 +1,9 @@
-# Welcome to [Slidev](https://github.com/slidevjs/slidev)!
+# Slide of Web Developer Conference 2024
 
-To start the slide show:
+## Slide(netlify)
 
-- `npm install`
-- `npm run dev`
-- visit <http://localhost:3030>
+TBW
 
-Edit the [slides.md](./slides.md) to see the changes.
+## Event
 
-Learn more about Slidev at the [documentation](https://sli.dev/).
+https://web-study.connpass.com/event/321711/
