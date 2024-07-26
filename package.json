@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build": "slidev build",
-    "dev": "slidev --open",
+    "dev": "slidev",
     "export": "slidev export"
   },
   "dependencies": {
@@ -12,5 +12,8 @@
     "@slidev/theme-default": "0.25.0",
     "@slidev/theme-seriph": "0.25.0",
     "vue": "3.4.33"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.8.3"
   }
 }
