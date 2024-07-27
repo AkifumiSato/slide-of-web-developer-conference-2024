@@ -107,8 +107,6 @@ layout: fact
 ## 「戻れる」とは何か？
 
 ---
-transition: fade
----
 
 # 「戻れる」とは
 
@@ -163,7 +161,7 @@ layout: section
 
 # React系フレームワークのブラウザバック
 
-ReactやViewなどの宣言的UIライブラリをベースとしたフレームワークについて考える
+ReactやVueなどの宣言的UIライブラリをベースとしたフレームワークについて考える
 
 - `useState`で定義した状態は、ページ遷移時に破棄されるため復元できない
     - `useState`はコンポーネントのアンマウント時に状態が破棄される
@@ -179,7 +177,7 @@ ReactやViewなどの宣言的UIライブラリをベースとしたフレーム
 
 ここまでの情報も踏まえ、Soft Navigation時の理想の体験を考える
 
-- 履歴単位で状態が保存され、Soft Navigation時にはリセットされる
+- 履歴単位で状態が保存される
 - ブラウザバック・フォワード時には復元される
 - リロード時には復元される
 
@@ -202,7 +200,7 @@ Global StateとLocal Stateを比較する
 
 <br>
 
-<v-click>-> スコープの話と復元の話は別物</v-click>
+<span v-mark="{ at: 1, color: 'red', type: 'underline'}" class="bold">スコープの話と復元の話は別物</span>
 
 ---
 
@@ -210,20 +208,20 @@ Global StateとLocal Stateを比較する
 
 状態のスコープ観点に加え、保存・復元を観点に追加する
 
-|                                                                                        | 画面遷移時にリセット | ブラウザバック時の復元 | リロード時の復元 |
-|----------------------------------------------------------------------------------------|------------|-------------|----------|
-| Local State                                                                            | ✅          | ❌           | ❌        |
-| <span v-mark="{ at: 1, color: 'orange', type: 'underline'}">Local State+Storage</span> | ✅          | ✅           | ✅        |
-| <span v-mark="{ at: 1, color: 'orange', type: 'underline'}">Local State+URL</span>     | ✅          | ✅           | ✅        |
-| Global State                                                                           | ❌          | 🤔          | ❌        |
-| Global State+Storage                                                                   | ❌          | 🤔          | ✅        |
-| Global State+URL                                                                       | ❌          | 🤔          | ✅        |
+|                                                                                     | 画面遷移時にリセット | ブラウザバック時の復元 | リロード時の復元 |
+|-------------------------------------------------------------------------------------|------------|-------------|----------|
+| Local State                                                                         | ✅          | ❌           | ❌        |
+| <span v-mark="{ at: 1, color: 'orange', type: 'circle'}">Local State+Storage</span> | ✅          | ✅           | ✅        |
+| <span v-mark="{ at: 1, color: 'orange', type: 'circle'}">Local State+URL</span>     | ✅          | ✅           | ✅        |
+| Global State                                                                        | ❌          | 🤔          | ❌        |
+| Global State+Storage                                                                | ❌          | 🤔          | ✅        |
+| Global State+URL                                                                    | ❌          | 🤔          | ✅        |
 
 ---
 layout: fact
 ---
 
-## 理想のSoft Navigationに必要なのは<br>`LocalStorage\+(URL|SessionStorage)`
+## 理想のSoft Navigationに必要なのは<br>`Local State\+(URL|Storage)`
 
 ---
 layout: fact
@@ -309,7 +307,7 @@ transition: fade
 # location-stateのセットアップ
 
 ```tsx
-// src/app/Providers.tsx
+// src/app/providers.tsx
 "use client";
 
 import { LocationStateProvider } from "@location-state/core";
