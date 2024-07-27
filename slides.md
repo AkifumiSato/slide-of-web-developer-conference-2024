@@ -279,7 +279,7 @@ layout: fact
 layout: fact
 ---
 
-## 実装負担少なく、理想のSoft Navigationを実現する方法はないか
+## 実装負担少なく、<br>理想のSoft Navigationを実現する方法はないのだろうか
 
 ---
 layout: section
@@ -289,17 +289,169 @@ layout: section
 
 ---
 
-TBW
+# location-stateとは
+
+理想のSoft Navigationを実現するためのライブラリ
+
+- https://www.npmjs.com/package/@location-state/core
+- <Link to="25">前述の要件</Link>に対応
+- Next.jsを中心に対応中
+
+```shell
+$ npm i @location-state/core
+$ pnpm add @location-state/core
+```
+
+---
+transition: fade
+---
+
+# location-stateのセットアップ
+
+```tsx
+// src/app/Providers.tsx
+"use client";
+
+import { LocationStateProvider } from "@location-state/core";
+
+export function Providers({ children }: { children: React.ReactNode }) {
+  return <LocationStateProvider>{children}</LocationStateProvider>;
+}
+```
+
+---
+
+# location-stateのセットアップ
+
+```tsx
+// src/app/layout.tsx
+import { Providers } from "./Providers";
+
+// ...snip...
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en">
+      <body>
+        <Providers>{children}</Providers>
+      </body>
+    </html>
+  );
+}
+```
+---
+
+# location-stateの基本的な使い方
+
+```tsx {all|6-10}
+"use client";
+
+import { useLocationState } from "@location-state/core";
+
+export function Counter() {
+  const [counter, setCounter] = useLocationState({
+    name: "counter", // ユニークな状態名
+    defaultValue: 0, // 初期値
+    storeName: "session", // 保存先(デフォルトで選べるのは`"session"|"url"`)
+  });
+
+  return (
+    <div>
+      <p>
+        storeName: <b>{storeName}</b>, counter: <b>{counter}</b>
+      </p>
+      <button onClick={() => setCounter(counter + 1)}>increment</button>
+    </div>
+  );
+}
+```
+
+---
+
+# Demo
+
+実際にlocation-stateのリポジトリ内にある`examples`で動作を確誽
+
+- [basic](https://github.com/recruit-tech/location-state/tree/main/apps/example-next-basic)
+- [unsafe-navigation](https://github.com/recruit-tech/location-state/tree/main/apps/example-next-unsafe-navigation)
 
 ---
 layout: section
 ---
 
-# location-stateのその他機能
+# 付録:<br>location-stateのリポジトリ構成
 
 ---
 
-TBW
+# モダンなツールや構成
+
+location-stateのツールチェーンは積極的にモダンな構成に維持してる
+
+- pnpm monorepo
+- [biome](https://biomejs.dev/)
+- turborepoによるCI高速化
+- renovateによる自動バージョンアップ
+- [tsup](https://tsup.egoist.dev/)
+
+---
+
+# RenovateとCIによる依存関係の自動アップデート戦略
+
+単体テストはもちろん、examplesに対しPlaywrightテストも実装、CIでチェック
+
+1. Renovateが依存ライブラリのバージョンアップのプルリクを作成
+2. CIでlint、type check、単体テスト、Playwrightテストを実行
+3. オールグリーンでrenovate-approveがプルリクを承認、マージ
+
+https://github.com/recruit-tech/location-state/pull/445
+
+---
+
+# changesetsによるリリース自動化
+
+packageリリース管理ツールのchangesetsを導入
+
+- [release PR](https://github.com/recruit-tech/location-state/pull/406)
+- [release note](https://github.com/recruit-tech/location-state/releases/tag/%40location-state%2Fnext%401.2.1)
+- [publish](https://github.com/recruit-tech/location-state/actions/runs/9639536391/job/26581864673)
+
+---
+layout: section
+---
+
+# 付録:<br>location-stateのその他機能
+
+---
+
+# Next.jsサポート
+
+Next.jsを積極的にサポート
+
+- [Pages Routerサポート用のパッケージ](https://www.npmjs.com/package/@location-state/next)
+- `examples`でNext.jsのサンプルを提供・テストを実施
+
+---
+
+# 多彩なカスタマイズ性
+
+Navigation連携、保存・復元処理を抽象化しているため、多彩なカスタマイズが可能
+
+- [Syncer](https://github.com/recruit-tech/location-state/blob/main/packages/location-state-core/docs/API.md#Syncer): Navigation連携のInterface
+- [Store](https://github.com/recruit-tech/location-state/blob/main/packages/location-state-core/docs/API.md#store): 保存・復元処理のInterface
+- [Refine](https://github.com/recruit-tech/location-state/blob/main/packages/location-state-core/docs/API.md#type-Refine): 復元時のValidation Interface
+
+---
+
+# Conform連携
+
+App Routerと相性のいいFormライブラリである[conform](https://conform.guide/)との連携もサポート
+
+- https://www.npmjs.com/package/@location-state/conform
+- [example](https://github.com/recruit-tech/location-state/tree/main/apps/example-next-conform)
 
 ---
 layout: section
@@ -309,12 +461,16 @@ layout: section
 
 ---
 
-TBW
+# location-stateのすゝめ まとめ
+
+冒頭述べたAgendaの再掲
+
+- ブラウザバック体験は非常に重要なUX
+- Reactの`useState`の状態は復元されない
+- `location-state`というライブラリを使えば簡単に復元を実装できる
 
 ---
+layout: fact
+---
 
-# Memo
-
-- 状態にはスコープとライフタイムがある
-
-
+## 日本のブラウザバック体験をよくしていく<br>きっかけになれば嬉しいです
