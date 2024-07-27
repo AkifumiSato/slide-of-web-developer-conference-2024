@@ -1,7 +1,7 @@
 ---
 theme: default
 # https://unsplash.com/ja/%E5%86%99%E7%9C%9F/%E7%B4%AB%E9%BB%84%E8%89%B2%E3%82%AA%E3%83%AC%E3%83%B3%E3%82%B8%E8%89%B2-DKDFBtmZSz8
-background: /assets/gradation-background.jpg
+background: /gradation-background.jpg
 highlighter: shiki
 lineNumbers: false
 title: location-stateのすゝめ
