@@ -196,11 +196,18 @@ Global StateとLocal Stateを比較する
 |              | 画面遷移時にリセット | ブラウザバック時の復元 | リロード時の復元 |
 |--------------|------------|-------------|----------|
 | Local State  | ✅          | ❌           | ❌        |
-| Global State | ❌          | 🤔          | ❌        |
+| Global State | ❌          | ❌(条件次第で✅)   | ❌        |
 
 <br>
 
 <span v-mark="{ at: 1, color: 'red', type: 'underline'}" class="bold">スコープの話と復元の話は別物</span>
+
+
+---
+layout: fact
+---
+
+## 欲しいのは履歴位置ごとに復元するState
 
 ---
 
@@ -208,20 +215,18 @@ Global StateとLocal Stateを比較する
 
 状態のスコープ観点に加え、保存・復元を観点に追加する
 
-|                                                                                     | 画面遷移時にリセット | ブラウザバック時の復元 | リロード時の復元 |
-|-------------------------------------------------------------------------------------|------------|-------------|----------|
-| Local State                                                                         | ✅          | ❌           | ❌        |
-| <span v-mark="{ at: 1, color: 'orange', type: 'circle'}">Local State+Storage</span> | ✅          | ✅           | ✅        |
-| <span v-mark="{ at: 1, color: 'orange', type: 'circle'}">Local State+URL</span>     | ✅          | ✅           | ✅        |
-| Global State                                                                        | ❌          | 🤔          | ❌        |
-| Global State+Storage                                                                | ❌          | 🤔          | ✅        |
-| Global State+URL                                                                    | ❌          | 🤔          | ✅        |
+|                                                                                         | 画面遷移時にリセット | ブラウザバック時の復元 | リロード時の復元 |
+|-----------------------------------------------------------------------------------------|------------|-------------|----------|
+| Local State                                                                             | ✅          | ❌           | ❌        |
+| <span v-mark="{ at: 1, color: 'orange', type: 'circle'}">Local State+Restoration</span> | ✅          | ✅           | ✅        |
+| Global State                                                                            | ❌          | ❌(条件次第で✅)   | ❌        |
+| Global State+Restoration                                                                | ❌          | ❌(条件次第で✅)   | ✅        |
 
 ---
 layout: fact
 ---
 
-## 理想のSoft Navigationに必要なのは<br>`Local State\+(URL|Storage)`
+## 理想のSoft Navigationに必要なのは<br>Local State+Restoration
 
 ---
 layout: fact
@@ -251,9 +256,9 @@ layout: section
   - バンドルサイズは極力増やしたくない
 - 開発者要件
   - 冗長な実装は避ける
-  - できるだけ`useState`などと類似したAPI
   - Next.jsと簡単に連携したい
-- ...
+
+...
 
 ---
 
@@ -294,6 +299,14 @@ layout: section
 - https://www.npmjs.com/package/@location-state/core
 - <Link to="25">前述の要件</Link>に対応
 - Next.jsを中心に対応中
+
+---
+transition: fade
+---
+
+# location-stateのセットアップ
+
+https://www.npmjs.com/package/@location-state/core
 
 ```shell
 $ npm i @location-state/core
@@ -345,6 +358,25 @@ export default function RootLayout({
 
 # location-stateの基本的な使い方
 
+````md magic-move
+```tsx
+"use client";
+
+import { useState } from "react";
+
+export function Counter() {
+  const [counter, setCounter] = useState(0);
+
+  return (
+    <div>
+      <p>
+        storeName: <b>{storeName}</b>, counter: <b>{counter}</b>
+      </p>
+      <button onClick={() => setCounter(counter + 1)}>increment</button>
+    </div>
+  );
+}
+```
 ```tsx {all|6-10}
 "use client";
 
@@ -367,6 +399,7 @@ export function Counter() {
   );
 }
 ```
+````
 
 ---
 
