@@ -25,16 +25,16 @@ mdc: true
 # Profile
 
 - Name: 佐藤 昭文(X: [akfm_sato](https://x.com/akfm_sato))
-    - Next.js
-    - Rust
-    - テスト設計
-    - チーム開発
+  - Next.js
+  - Rust
+  - テスト設計
+  - チーム開発
 - Activity
-    - https://zenn.dev/akfm
-    - [JS Conf 2023](https://main--remarkable-figolla-a694f0.netlify.app/1)
-    - [Vercel meetup](https://zesty-basbousa-04576f.netlify.app/1)
-    - [Node学園42](https://youtu.be/ONMIjHfitHM?t=9139)
-    - [Rust入門本の執筆](https://www.shuwasystem.co.jp/book/9784798067315.html)
+  - https://zenn.dev/akfm
+  - [JS Conf 2023](https://main--remarkable-figolla-a694f0.netlify.app/1)
+  - [Vercel meetup](https://zesty-basbousa-04576f.netlify.app/1)
+  - [Node学園42](https://youtu.be/ONMIjHfitHM?t=9139)
+  - [Rust入門本の執筆](https://www.shuwasystem.co.jp/book/9784798067315.html)
 
 ---
 
@@ -59,15 +59,15 @@ layout: section
 ブラウザが提供する重要機能とは何だろう
 
 - 開発者目線
-    - html/CSS/JavaScriptのサポート
-    - ブラウザのバグ、固有の挙動
-    - 開発者ツール
-    - etc...
+  - html/CSS/JavaScriptのサポート
+  - ブラウザのバグ、固有の挙動
+  - 開発者ツール
+  - etc...
 - ユーザー目線
-    - URL入力
-    - ブラウザバック・フォワード
-    - ブックマーク
-    - プライバシー保護
+  - URL入力
+  - ブラウザバック・フォワード
+  - ブックマーク
+  - プライバシー保護
 
 ---
 layout: fact
@@ -88,7 +88,7 @@ layout: fact
 [ブラウザバックの仕様](https://html.spec.whatwg.org/multipage/browsing-the-web.html#traverse-the-history-by-a-delta)
 はブラウザによって異なる点が多い
 
-- bfcache(`"blazingly fast" cache`とも言うらしい)
+- bfcache(back forward cache)
 - DOMの復元
 - formの復元
 - キャプチャらしきものの表示
@@ -115,19 +115,19 @@ layout: fact
 - ページの内容
 - スクロール位置
 - 操作した内容
-    - formの入力内容
-    - モーダルの表示状態
-    - etc...
+  - formの入力内容
+  - モーダルの表示状態
+  - etc...
 
 ---
 
-# _リッチなWebアプリケーションのための7つの原則_
+# リッチなWebアプリケーションのための7つの原則
 
 https://yosuke-furukawa.hatenablog.com/entry/2014/11/14/141415#5
 
-> "戻る"のは素早く行われるべきだ。
+> _"戻る"のは素早く行われるべきだ。_
 >
-> ユーザーは"戻る"事によってデータが変更されるような事は期待していない。
+> _ユーザーは"戻る"事によってデータが変更されるような事は期待していない。_
 
 ---
 layout: fact
@@ -151,7 +151,7 @@ layout: section
 
 # Soft Navigation
 
-様々な呼称があるが、ここではNext.jsに習ってSoft Navigationと呼称する
+様々な呼称があるが、ここではNext.jsに習って[Soft Navigation](https://nextjs.org/docs/app/building-your-application/routing/linking-and-navigating#5-soft-navigation)と呼称する
 
 - ページ遷移がJavaScriptで制御される
 - bfcacheは当然ながら適用できない
@@ -164,12 +164,9 @@ layout: section
 ReactやVueなどの宣言的UIライブラリをベースとしたフレームワークについて考える
 
 - `useState`で定義した状態は、ページ遷移時に破棄されるため復元できない
-    - `useState`はコンポーネントのアンマウント時に状態が破棄される
-    - React系フレームワークでは、ページ遷移時にページコンポーネントをマウントする
-    - 前のページコンポーネントはアンマウントされる
+  - `useState`はコンポーネントのアンマウント時に状態が破棄される
+  - React系フレームワークでは、ページ遷移時にページコンポーネントをマウントする
 - Global Stateはページ間で共通のため、ページ遷移ごとにリセットしたい時に向かない
-    - e.g. モーダルの開閉状態を共有してると、ページ遷移時にリセットすることになりブラウザバック時に復元されない
-    - e.g. `/hoge`にあるアコーディオンを開いて`/fuga`へ遷移、`/fuga`からリンク押下で再度`/hoge`へ遷移するとアコーディオンが開いた状態で表示される
 
 ---
 
@@ -194,14 +191,13 @@ layout: section
 Global StateとLocal Stateを比較する
 
 |              | 画面遷移時にリセット | ブラウザバック時の復元 | リロード時の復元 |
-|--------------|------------|-------------|----------|
-| Local State  | ✅          | ❌           | ❌        |
-| Global State | ❌          | ❌(条件次第で✅)   | ❌        |
+| ------------ | -------------------- | ---------------------- | ---------------- |
+| Local State  | ✅                   | ❌                     | ❌               |
+| Global State | ❌                   | ❌(条件次第で✅)       | ❌               |
 
 <br>
 
 <span v-mark="{ at: 1, color: 'red', type: 'underline'}" class="bold">スコープの話と復元の話は別物</span>
-
 
 ---
 layout: fact
@@ -216,11 +212,11 @@ layout: fact
 状態のスコープ観点に加え、保存・復元を観点に追加する
 
 |                                                                                         | 画面遷移時にリセット | ブラウザバック時の復元 | リロード時の復元 |
-|-----------------------------------------------------------------------------------------|------------|-------------|----------|
-| Local State                                                                             | ✅          | ❌           | ❌        |
-| <span v-mark="{ at: 1, color: 'orange', type: 'circle'}">Local State+Restoration</span> | ✅          | ✅           | ✅        |
-| Global State                                                                            | ❌          | ❌(条件次第で✅)   | ❌        |
-| Global State+Restoration                                                                | ❌          | ❌(条件次第で✅)   | ✅        |
+| --------------------------------------------------------------------------------------- | -------------------- | ---------------------- | ---------------- |
+| Local State                                                                             | ✅                   | ❌                     | ❌               |
+| <span v-mark="{ at: 1, color: 'orange', type: 'circle'}">Local State+Restoration</span> | ✅                   | ✅                     | ✅               |
+| Global State                                                                            | ❌                   | ❌(条件次第で✅)       | ❌               |
+| Global State+Restoration                                                                | ❌                   | ❌(条件次第で✅)       | ✅               |
 
 ---
 layout: fact
@@ -299,6 +295,7 @@ layout: section
 - https://www.npmjs.com/package/@location-state/core
 - <Link to="25">前述の要件</Link>に対応
 - Next.jsを中心に対応中
+- (ユニークな`name`を必要とするので、厳密にはLocal Stateではない)
 
 ---
 transition: fade
@@ -354,6 +351,7 @@ export default function RootLayout({
   );
 }
 ```
+
 ---
 
 # location-stateの基本的な使い方
@@ -377,6 +375,7 @@ export function Counter() {
   );
 }
 ```
+
 ```tsx {all|6-10}
 "use client";
 
@@ -409,6 +408,40 @@ export function Counter() {
 
 - [basic](https://github.com/recruit-tech/location-state/tree/main/apps/example-next-basic)
 - [unsafe-navigation](https://github.com/recruit-tech/location-state/tree/main/apps/example-next-unsafe-navigation)
+
+---
+layout: section
+---
+
+# 付録:<br>location-stateのその他機能
+
+---
+
+# Next.jsサポート
+
+Next.jsを積極的にサポート
+
+- [Pages Routerサポート用のパッケージ](https://www.npmjs.com/package/@location-state/next)
+- `examples`でNext.jsのサンプルを提供・テストを実施
+
+---
+
+# 多彩なカスタマイズ性
+
+Navigation連携、保存・復元処理を抽象化しているため、多彩なカスタマイズが可能
+
+- [Syncer](https://github.com/recruit-tech/location-state/blob/main/packages/location-state-core/docs/API.md#Syncer): Navigation連携のInterface
+- [Store](https://github.com/recruit-tech/location-state/blob/main/packages/location-state-core/docs/API.md#store): 保存・復元処理のInterface
+- [Refine](https://github.com/recruit-tech/location-state/blob/main/packages/location-state-core/docs/API.md#type-Refine): 復元時のValidation Interface
+
+---
+
+# Conform連携
+
+App Routerと相性のいいFormライブラリである[conform](https://conform.guide/)との連携もサポート
+
+- https://www.npmjs.com/package/@location-state/conform
+- [example](https://github.com/recruit-tech/location-state/tree/main/apps/example-next-conform)
 
 ---
 layout: section
@@ -454,40 +487,6 @@ packageリリース管理ツールのchangesetsを導入
 layout: section
 ---
 
-# 付録:<br>location-stateのその他機能
-
----
-
-# Next.jsサポート
-
-Next.jsを積極的にサポート
-
-- [Pages Routerサポート用のパッケージ](https://www.npmjs.com/package/@location-state/next)
-- `examples`でNext.jsのサンプルを提供・テストを実施
-
----
-
-# 多彩なカスタマイズ性
-
-Navigation連携、保存・復元処理を抽象化しているため、多彩なカスタマイズが可能
-
-- [Syncer](https://github.com/recruit-tech/location-state/blob/main/packages/location-state-core/docs/API.md#Syncer): Navigation連携のInterface
-- [Store](https://github.com/recruit-tech/location-state/blob/main/packages/location-state-core/docs/API.md#store): 保存・復元処理のInterface
-- [Refine](https://github.com/recruit-tech/location-state/blob/main/packages/location-state-core/docs/API.md#type-Refine): 復元時のValidation Interface
-
----
-
-# Conform連携
-
-App Routerと相性のいいFormライブラリである[conform](https://conform.guide/)との連携もサポート
-
-- https://www.npmjs.com/package/@location-state/conform
-- [example](https://github.com/recruit-tech/location-state/tree/main/apps/example-next-conform)
-
----
-layout: section
----
-
 # まとめ
 
 ---
@@ -504,4 +503,4 @@ layout: section
 layout: fact
 ---
 
-## 日本のブラウザバック体験をよくしていく<br>きっかけになれば嬉しいです
+## 今日話を聞いて、ブラウザバックを気にする人が<br>少しでも増えてくれたら嬉しいです
