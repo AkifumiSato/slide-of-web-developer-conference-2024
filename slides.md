@@ -60,7 +60,7 @@ https://offers-jp.connpass.com/event/328878/
 
 # Agenda
 
-本日の主題
+本日の主題を要約
 
 - ブラウザバック体験は非常に重要なUX
 - Reactの`useState`の状態は復元されない
@@ -74,7 +74,7 @@ layout: section
 
 ---
 
-# ブラウザバックの機能
+# ブラウザの機能
 
 ブラウザが提供する重要機能とは何だろう
 
@@ -460,6 +460,8 @@ export function Counter() {
 実際にlocation-stateのリポジトリ内にある`examples`で動作を確誽
 
 - [basic](https://github.com/recruit-tech/location-state/tree/main/apps/example-next-basic)
+- [conform](https://github.com/recruit-tech/location-state/tree/main/apps/example-next-conform)
+- [custom-store](https://github.com/recruit-tech/location-state/tree/main/apps/example-next-custom-store)
 - [unsafe-navigation](https://github.com/recruit-tech/location-state/tree/main/apps/example-next-unsafe-navigation)
 
 ---
@@ -495,6 +497,27 @@ App Routerと相性のいいFormライブラリである[conform](https://confor
 
 - https://www.npmjs.com/package/@location-state/conform
 - [example](https://github.com/recruit-tech/location-state/tree/main/apps/example-next-conform)
+
+---
+
+# 複数ブラウザのサポート
+
+Navigation APIの部分的なpolyfillである[unsafe-navigation](https://github.com/recruit-tech/location-state/tree/main/apps/example-next-unsafe-navigation)を提供
+
+```tsx {all|4,8}
+"use client";
+
+import { LocationStateProvider, NavigationSyncer } from "@location-state/core";
+import { unsafeNavigation } from "@location-state/core/unsafe-navigation";
+
+export function Providers({ children }: { children: React.ReactNode }) {
+  return (
+    <LocationStateProvider syncer={new NavigationSyncer(unsafeNavigation)}>
+      {children}
+    </LocationStateProvider>
+  );
+}
+```
 
 ---
 layout: section
