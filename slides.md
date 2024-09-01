@@ -28,13 +28,33 @@ mdc: true
   - Next.js
   - Rust
   - テスト設計
-  - チーム開発
+  - アジャイル
 - Activity
   - https://zenn.dev/akfm
-  - [JS Conf 2023](https://main--remarkable-figolla-a694f0.netlify.app/1)
-  - [Vercel meetup](https://zesty-basbousa-04576f.netlify.app/1)
-  - [Node学園42](https://youtu.be/ONMIjHfitHM?t=9139)
   - [Rust入門本の執筆](https://www.shuwasystem.co.jp/book/9784798067315.html)
+  - [Offers - Next.js v15 アップデート解説イベント](https://offers-jp.connpass.com/event/328878/)
+  - [JS Conf 2023](https://main--remarkable-figolla-a694f0.netlify.app/1) / JS Conf 2024
+  - etc...
+
+---
+
+# Zenn - Next.jsの考え方
+
+https://zenn.dev/akfm/books/nextjs-basic-principle
+
+<div class="flex justify-center w-full h-90 pt-5">
+  <img src="/nextjs-basic-principle.png" alt="Next.jsの考え方" class="object-contain">
+</div>
+
+---
+
+# Offers - Next.js v15 アップデート解説イベント
+
+https://offers-jp.connpass.com/event/328878/
+
+<div class="flex justify-center w-full  h-90 pt-5">
+  <img src="/offers-event.png" alt="Offers - Next.js v15 アップデート解説イベント" class="object-contain">
+</div>
 
 ---
 
@@ -44,7 +64,7 @@ mdc: true
 
 - ブラウザバック体験は非常に重要なUX
 - Reactの`useState`の状態は復元されない
-- `location-state`というライブラリを使えば簡単に復元を実装できる
+- [`location-state`](https://www.npmjs.com/package/@location-state/core)というライブラリを使えば簡単に復元を実装できる
 
 ---
 layout: section
@@ -54,7 +74,7 @@ layout: section
 
 ---
 
-# ブラウザバックの重要性
+# ブラウザバックの機能
 
 ブラウザが提供する重要機能とは何だろう
 
@@ -63,9 +83,10 @@ layout: section
   - ブラウザのバグ、固有の挙動
   - 開発者ツール
   - etc...
-- ユーザー目線
-  - URL入力
-  - ブラウザバック・フォワード
+- 一般ユーザー目線
+  - Webブラウジング
+    - URL入力
+    - ブラウザバック・フォワード
   - ブックマーク
   - プライバシー保護
 
@@ -73,7 +94,13 @@ layout: section
 layout: fact
 ---
 
-## ユーザー目線で意外と必須と感じるものは少ない
+## 技術的には非常に多くの機能がブラウザ側にあって<br>Webは成り立っている
+
+---
+layout: fact
+---
+
+## しかし、一般ユーザーの目線で必須と感じるものは<br>意外と少ない
 
 ---
 layout: fact
@@ -121,9 +148,9 @@ layout: fact
 
 ---
 
-# リッチなWebアプリケーションのための7つの原則
+# [_リッチなWebアプリケーションのための7つの原則_](https://yosuke-furukawa.hatenablog.com/entry/2014/11/14/141415#5)
 
-https://yosuke-furukawa.hatenablog.com/entry/2014/11/14/141415#5
+現在のVercel社長のブログの翻訳(2014)
 
 > _"戻る"のは素早く行われるべきだ。_
 >
@@ -139,7 +166,7 @@ layout: fact
 layout: fact
 ---
 
-## しかしモダンなフレームワークでは<br>遷移をJavaScript制御で行っている
+## しかしモダンなフレームワークで遷移はJavaScript制御のため<br>bfcacheは使えない
 
 ---
 layout: section
@@ -253,8 +280,7 @@ layout: section
 - 開発者要件
   - 冗長な実装は避ける
   - Next.jsと簡単に連携したい
-
-...
+- ...
 
 ---
 
@@ -263,8 +289,7 @@ layout: section
 前述の要件を満たす実装を自分で行おうとすると、以下のような課題がある
 
 - フレームワークに依存せず、どうやってNavigation検知するか
-- いつどうやって値を保存するか
-- いつどうやって値を参照するか
+- いつどうやって値を保存・参照するか
 - 保存した値のマイグレーションをどうやってやるか
 - レンダリング回数をどうやって最適化すべきか
 
@@ -292,10 +317,12 @@ layout: section
 
 理想のSoft Navigationを実現するためのライブラリ
 
-- https://www.npmjs.com/package/@location-state/core
+- `npm i @location-state/core`
 - <Link to="25">前述の要件</Link>に対応
 - Next.jsを中心に対応中
-- (ユニークな`name`を必要とするので、厳密にはLocal Stateではない)
+  - App Routerは`@location-state/core`のみでOK
+  - Pages Routerは`@location-state/next`で連携可能
+- ※ユニークな`name`を必要とするので、厳密にはLocal Stateではない
 
 ---
 transition: fade
@@ -358,6 +385,7 @@ export default function RootLayout({
 
 ````md magic-move
 ```tsx
+// before
 "use client";
 
 import { useState } from "react";
@@ -376,7 +404,32 @@ export function Counter() {
 }
 ```
 
-```tsx {all|6-10}
+```tsx
+// after
+"use client";
+
+import { useLocationState } from "@location-state/core";
+
+export function Counter() {
+  const [counter, setCounter] = useLocationState({
+    name: "counter",
+    defaultValue: 0,
+    storeName: "session",
+  });
+
+  return (
+    <div>
+      <p>
+        storeName: <b>{storeName}</b>, counter: <b>{counter}</b>
+      </p>
+      <button onClick={() => setCounter(counter + 1)}>increment</button>
+    </div>
+  );
+}
+```
+
+```tsx {7-11}
+// after
 "use client";
 
 import { useLocationState } from "@location-state/core";
@@ -455,11 +508,13 @@ layout: section
 
 location-stateのツールチェーンは積極的にモダンな構成に維持してる
 
-- pnpm monorepo
-- [biome](https://biomejs.dev/)
+- monorepo
+- pnpm
+- biome
 - turborepoによるCI高速化
 - renovateによる自動バージョンアップ
 - [tsup](https://tsup.egoist.dev/)
+- [changesets](https://github.com/changesets/changesets)
 
 ---
 
