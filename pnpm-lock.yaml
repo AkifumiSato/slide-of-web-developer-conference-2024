@@ -22,10 +22,10 @@ importers:
         version: 3.4.33(typescript@5.5.3)
     devDependencies:
       prettier:
-        specifier: ^3.3.3
+        specifier: 3.3.3
         version: 3.3.3
       prettier-plugin-slidev:
-        specifier: ^1.0.5
+        specifier: 1.0.5
         version: 1.0.5(prettier@3.3.3)
 
 packages:
